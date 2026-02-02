@@ -8,7 +8,7 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
 } from "firebase/auth";
-import {getFirestore, addDoc, collection,getDoc} from "firebase/firestore";
+import {getFirestore, addDoc, collection,getDoc, getDocs, doc} from "firebase/firestore";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -40,6 +40,8 @@ export const useFirebase = () => useContext(FirebaseContext);
 export const FirebaseProvider = ({ children }) => {
 
   const [user, setUser] = useState(null);
+
+
 
   useEffect(() => {
     onAuthStateChanged(firebaseAuth, (user) => {
@@ -98,7 +100,7 @@ export const FirebaseProvider = ({ children }) => {
   // Check if user is logged in
   const isLoggedIn = user ? true : false;
 
-  const handleCreateNewListing = async (name, Authour, price, cover) => {
+  const handleCreateNewListing = async (name, Author, price, cover) => {
     try {
       // 1. Upload image to Cloudinary using environment variables
       const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
@@ -120,13 +122,12 @@ export const FirebaseProvider = ({ children }) => {
       
       await addDoc(collection(firestore, 'books'), {
         name,
-        Authour,
+        Author,
         price,
         imageURL: imageUrl,
         userID: user ? user.uid : null,
         userEmail: user ? user.email : null,
         displayName: user ? user.displayName : null,
-        photoURL: user ? user.photoURL : null,
       });
       alert('Listing created successfully!');
       return true;
@@ -136,11 +137,34 @@ export const FirebaseProvider = ({ children }) => {
     }
   }
 
+  
+
+  // List all books
 const listAllBooks =  () => {
-    
-      return  getDoc(collection(firestore, 'books'));
-     
+      return  getDocs(collection(firestore, 'books'));
   };
+
+  // Get Single Book by ID
+  const getBookById = async (bookId) => {
+    try {
+      const bookDoc = await getDoc(doc(firestore, 'books', bookId));
+      return bookDoc;  
+    }catch (error) {
+      console.error('Error fetching book by ID:', error);
+    }
+  };
+
+  const placeOrder = async (bookId,qty) => {
+    // Implementation for placing an order
+    const collectionRef = collection(firestore, 'books', bookId, 'orders');
+    const result = await addDoc(collectionRef, {
+      userID: user ? user.uid : null,
+      userEmail: user ? user.email : null,
+      displayName: user ? user.displayName : null,
+       qty: Number(qty),
+  });
+   return result;
+  }
 
   return (
     <FirebaseContext.Provider
@@ -152,6 +176,8 @@ const listAllBooks =  () => {
         signinWithGoogle,
         handleCreateNewListing,
         listAllBooks,
+        getBookById,
+        placeOrder
       }}
     >
       {children}
