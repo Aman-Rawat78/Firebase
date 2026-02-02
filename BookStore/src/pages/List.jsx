@@ -6,7 +6,7 @@ import { useFirebase } from "../context/Firebase";
 
 const List = () => {
   const [name, setname] = useState("");
-  const [Authour, setAuthour] = useState("");
+  const [Author, setAuthor] = useState("");
   const [price, setprice] = useState("");
   const [coverPic, setCoverPic] = useState("");
   const fileInputRef = useRef(null);
@@ -36,14 +36,14 @@ const maxSize = 5 * 1024 * 1024; // 5MB
 
   const handleSubmit = async(e) => {
     e.preventDefault();
-    if (!name || !Authour || !price || !coverPic) {
+    if (!name || !Author || !price || !coverPic) {
       alert('Please fill all fields and select a cover image.');
       return;
     }
-    const success = await handleCreateNewListing(name, Authour, price, coverPic);
+    const success = await handleCreateNewListing(name, Author, price, coverPic);
     if (success) {
       setname("");
-      setAuthour("");
+      setAuthor("");
       setprice("");
       setCoverPic("");
       if (fileInputRef.current) {
@@ -66,13 +66,13 @@ const maxSize = 5 * 1024 * 1024; // 5MB
             />
           </Form.Group>
 
-          <Form.Group className="mb-3" controlId="Authour">
-            <Form.Label>Authour</Form.Label>
+          <Form.Group className="mb-3" controlId="Author">
+            <Form.Label>Author</Form.Label>
             <Form.Control
-              onChange={(e) => setAuthour(e.target.value)}
-              value={Authour}
+              onChange={(e) => setAuthor(e.target.value)}
+              value={Author}
               type="text"
-              placeholder="Enter Authour Name"
+              placeholder="Enter Author Name"
             />
           </Form.Group>
 
