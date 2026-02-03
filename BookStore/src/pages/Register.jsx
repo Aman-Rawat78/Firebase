@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React,{ useState } from 'react'
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import {useNavigate}  from 'react-router-dom';
 import { useFirebase } from '../context/Firebase';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, Navigate } from "react-router-dom";
+
 
 const Register = () => {
 
@@ -14,21 +14,14 @@ const Register = () => {
 
   const handleSignup = async(e)=>{
     e.preventDefault();
-    console.log("registering a user...")
+   
     const response = await SignupUserWithEmailAndPassword(email,password);
     if(response){
       setEmail('');
       setPassword('');
+       navigate('/');
     }
   };
-
-  useEffect(()=>{
-    if(isLoggedIn){
-      //navigate to home page
-      navigate('/');
-    }   
-  },[isLoggedIn,navigate])
-
 
 
   return (

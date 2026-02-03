@@ -1,7 +1,6 @@
 import React, { useState, useRef } from "react";
 import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
-import { Link, useNavigate } from "react-router-dom";
+import LoadingButton from "../components/LoadingButton";
 import { useFirebase } from "../context/Firebase";
 
 const List = () => {
@@ -34,13 +33,16 @@ const maxSize = 5 * 1024 * 1024; // 5MB
     setCoverPic(file);
   }
 
+  const [loading, setLoading] = useState(false);
   const handleSubmit = async(e) => {
     e.preventDefault();
     if (!name || !Author || !price || !coverPic) {
       alert('Please fill all fields and select a cover image.');
       return;
     }
+    setLoading(true);
     const success = await handleCreateNewListing(name, Author, price, coverPic);
+    setLoading(false);
     if (success) {
       setname("");
       setAuthor("");
@@ -51,10 +53,15 @@ const maxSize = 5 * 1024 * 1024; // 5MB
       }
     }
   }
+  
   return (
     <div className="Container">
       <div className="register-inner ">
-        <h3>Create Book</h3>
+        <div style={{ width: '100%', textAlign: 'center', margin: '2rem 0', fontSize: '1.5rem', fontWeight: 'bold' }}>
+            Fill the form to list a new book.
+          </div>
+      
+      
         <Form>
           <Form.Group className="mb-3 mt-5" controlId="Name">
             <Form.Label>Enter Book Name</Form.Label>
@@ -65,7 +72,6 @@ const maxSize = 5 * 1024 * 1024; // 5MB
               placeholder="Enter Book Name"
             />
           </Form.Group>
-
           <Form.Group className="mb-3" controlId="Author">
             <Form.Label>Author</Form.Label>
             <Form.Control
@@ -75,7 +81,6 @@ const maxSize = 5 * 1024 * 1024; // 5MB
               placeholder="Enter Author Name"
             />
           </Form.Group>
-
           <Form.Group className="mb-3" controlId="Price">
             <Form.Label>Enter Price</Form.Label>
             <Form.Control
@@ -85,7 +90,6 @@ const maxSize = 5 * 1024 * 1024; // 5MB
               placeholder="Enter Price"
             />
           </Form.Group>
-
           <Form.Group className="mb-3" controlId="CoverPic">
             <Form.Label>Add CoverPic</Form.Label>
             <Form.Control
@@ -95,10 +99,9 @@ const maxSize = 5 * 1024 * 1024; // 5MB
               ref={fileInputRef}
             />
           </Form.Group>
-
-          <Button onClick={handleSubmit} variant="primary" type="submit">
+          <LoadingButton onClick={handleSubmit} variant="primary" type="submit" loading={loading}>
             Create
-          </Button>
+          </LoadingButton>
         </Form>
       </div>
     </div>

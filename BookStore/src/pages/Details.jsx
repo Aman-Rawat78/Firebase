@@ -3,13 +3,15 @@ import { useParams } from "react-router-dom";
 import { useFirebase } from "../context/Firebase";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+import LoadingButton from "../components/LoadingButton";
 
 const Details = () => {
   const params = useParams();
   const { getBookById , placeOrder } = useFirebase();
   const [data, setData] = useState(null);
   const [qty, setQty] = useState(1);
-//   console.log("Book Data:", data);
+  const [loading, setLoading] = useState(false);
+
 
   useEffect(() => {
     const fetchBookDetails = async () => {
@@ -18,14 +20,16 @@ const Details = () => {
     fetchBookDetails();
   }, [params.bookId]);
 
+
+
   const handlePlaceOrder = async () => {
     if(qty <=0){
       alert("Please enter a valid quantity");
       return;
     }
-
+     setLoading(true);
     const result = await placeOrder(params.bookId, qty);
-    console.log("Order placed:", result);
+    setLoading(false);
   };
 
   if (data == null) return <h1>Loading...</h1>;
@@ -49,7 +53,10 @@ const Details = () => {
           placeholder="Enter Quantity"
         />
       </Form.Group>
-      <Button onClick={handlePlaceOrder} variant="success" type="button">Buy Now</Button>
+    
+      <LoadingButton onClick={handlePlaceOrder} variant="success" type="submit" loading={loading}>
+           Buy Now
+       </LoadingButton>
     </div>
   );
 };

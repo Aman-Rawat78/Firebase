@@ -14,10 +14,10 @@ function App() {
   useEffect(() => {
     onAuthStateChanged(firebaseAuth, (user) => {
       if (user) {
-        console.log("User is signed in:", user);
+        // console.log("User is signed in:", user);
         setUser(user);
       } else {
-        console.log("No user is signed in.");
+        // console.log("No user is signed in.");
         setUser(null);
       }
     });
