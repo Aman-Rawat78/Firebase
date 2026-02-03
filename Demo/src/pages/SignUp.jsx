@@ -16,7 +16,7 @@ const Signup = () => {
 
   const handleSignup =async () => {
     const response = await signupUser.SignupUserWithEmailAndPassword(email, password);
-    console.log(response);
+    // console.log(response);
     if (response.user) {
       setEmail("");
       setPassword("");

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useFirebase } from "../context/Firebase";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import { Link ,useNavigate} from "react-router-dom";
+import { Link ,Navigate,useNavigate} from "react-router-dom";
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
@@ -12,20 +12,13 @@ const SignIn = () => {
 
   const handleSignIn = async (e) => {
     e.preventDefault();
-    console.log("login in a user...");
     const response = await SignIn(email, password);
     if (response) {
       setEmail("");
       setPassword("");
+       navigate('/');
     }
   };
-
-    useEffect(()=>{
-      if(isLoggedIn){
-        //navigate to home page
-        navigate('/');
-      }   
-    },[isLoggedIn,navigate])
 
   return (
     <div className="Container">

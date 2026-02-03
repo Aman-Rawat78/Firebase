@@ -9,7 +9,6 @@ const HomePage = () => {
     const [books, setBooks] = useState([]);
     useEffect(() => {  
         listAllBooks().then((books) => {
-            console.log("Books in store:", books.docs);
             setBooks(books.docs);
         }).catch((error) => {
             console.error("Error fetching books:", error);
@@ -20,8 +19,7 @@ const HomePage = () => {
         <h1>Welcome to the Book Store</h1>
         <CardGroup >
             {books.map((book) => (
-                 console.log("Rendering book:", book.id),
-                <Cards key={book.id} id={book.id} {...book.data()}/>
+                <Cards key={book.id} link={`/book/view/${book.id}`} {...book.data()} text={"View Details"}/>
             ))}
         </CardGroup>
     </div>  
